@@ -1,0 +1,42 @@
+.product-box {
+    position: relative;
+    padding: 15px;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid gainsboro;
+}
+
+.product-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.product-box:hover .product-title {
+    white-space: normal;
+    overflow: visible;
+}
+
+.product-box:hover {
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.category-button{
+    background: none;
+    border: none;
+    align-self: baseline;
+    margin-bottom: 10px;
+    font-size: 15px;
+}
+
+.filter-button{
+    background: none;
+    padding: 10px 6px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    border: 1px solid gray;
+}
+
+.size-button{
+    font-size: 17px;
+    margin-bottom: 10px;
+}

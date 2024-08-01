@@ -1,0 +1,18 @@
+.menu-item{
+    border: none;
+    background-color: white;
+    margin-bottom: 6px;
+}
+.menu-option-item{
+    margin-bottom: 8px;
+    border: none;
+    background-color: white;
+}
+.menu-img{
+    width: 10%;
+    padding: 5px 10px;
+}
+
+.menu-item:hover {
+    color: green;
+}
