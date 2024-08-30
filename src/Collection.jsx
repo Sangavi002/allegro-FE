@@ -1,11 +1,10 @@
-import { Box, Text, Spinner,Button, Img } from "@chakra-ui/react"
+import { Box, Text,Button, Img } from "@chakra-ui/react"
 import { useEffect,useState,useRef } from "react";
+import { Link } from "react-router-dom";
 import badgeLow from "./image/badgeLow.png"
 
 export const Collection = () => {
     const [data, setData] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
     const scroll = useRef(null);
 
     const scrollLeft = () => {
@@ -40,12 +39,10 @@ export const Collection = () => {
     };
 
     return (
+        <>
         <Box  mt="30px" >
-            {loading && <Spinner size="xl" />}
-            {error && <Text color="red">Error: {error}</Text>}
             {data && (
                 <Box >
-                    
                     {data.map((collection, collectionIndex) => (
                         <Box key={collectionIndex} mb="30" h="450px" bg="white" p="10px" position="relative"> 
                             <Button
@@ -60,7 +57,7 @@ export const Collection = () => {
                             >
                                 {"<"}
                             </Button>
-                                <Text fontSize="25px" fontFamily="sans-serif" mb="4"  m="8">{collection.name}</Text>
+                                <Text fontSize="25px" fontFamily="sans-serif" mb="4" >{collection.name}</Text>
                                 
                                 {collection.product.length === 0 ? (
                                     <Text>No products found.</Text>
@@ -78,6 +75,7 @@ export const Collection = () => {
                                     }}>
                                         {collection.product.map((product, productIndex) => (
                                             <Box w="17%" flex="0 0 auto" p="10px" key={productIndex}>
+                                                <Link key={productIndex} to={`/${collection.name}/${product._id}`} style={{textDecoration: "none"}}>
                                                 <Box display="flex" justifyContent="center" h="200px">
                                                     <img src={product.image} alt={product.title} width="70%" h="200px" /> 
                                                 </Box>
@@ -86,6 +84,7 @@ export const Collection = () => {
                                                 <Img src="https://sangavi002.github.io/allegro-image/smart.jpeg" alt="smart" w="23%" mt="3px" mb="5px"/>
                                                 <Text fontSize="13px" fontFamily="sans-serif" color="#707070" m="0" h="50px">{product.title}</Text>
                                                 <Text color="#1dbd25" fontSize="12px" fontFamily="sans-serif" fontWeight="700" mt="10px" mb="0"> delivery {product.delivery} <Img src="https://sangavi002.github.io/allegro-image/errors.png" alt="error" w="7%" mb="-4px"/></Text>
+                                                </Link>
                                             </Box>
                                         ))}
                                     </Box>
@@ -109,5 +108,6 @@ export const Collection = () => {
             )}
             
         </Box>
+        </>
     );
 }

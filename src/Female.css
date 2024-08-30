@@ -40,3 +40,48 @@
     font-size: 17px;
     margin-bottom: 10px;
 }
+.product_grid{
+    display:grid;
+    grid-template-columns:repeat(3,320px);
+    gap:15px;
+}
+@media screen and (max-width:1024px){
+    .category{
+        width: 20%;
+        height: 1500px;
+    }
+    .product{
+        width: 75%;
+    }
+    
+}
+
+@media screen and (min-width: 767px) and (max-width:1022px){
+    .category{
+        width: 25%;
+        height: 1500px;
+    }
+    .product{
+        width: 70%;
+    }
+    .product_grid{
+        display: grid;
+        grid-template-columns: repeat(2,300px);
+    }
+}
+
+@media screen and (max-width: 766px){
+    .category{
+        display: none;
+    }
+    .product{
+        width: 100%;
+    }
+    .container{
+        width: 880px;
+    }
+    .product_grid{
+        display: grid;
+        grid-template-columns: repeat(1,300px);
+    }
+}

@@ -6,11 +6,16 @@ import { Footer } from "./Footer"
 import { ProductDetail} from "./ProductDetail"
 import {Login } from "./Login"
 import { Register } from "./Register"
-import { Cart } from "./Cart"
+import { Cart } from "./Cart";
+import { CartProvider } from "./CartContext"
+import { Checkout } from "./Checkout"
+import { HomeProduct } from "./HomeProduct"
+import { PrivateRoute } from "./PrivateRoute"
 
 function App() {
   return(
     <>
+    <CartProvider>
     <Navbar />
       <Routes>
         <Route path="/" element={<Home />}/>
@@ -18,9 +23,12 @@ function App() {
         <Route path="/login" element={<Login />}/>
         <Route path="/female" element={<Female />}/>
         <Route path='/female/:category/:productId' element={<ProductDetail/>} />
-        <Route path="/cart/:userId" element={<Cart />}/>
+        <Route path='/:category/:productId' element={<HomeProduct/>} />
+        <Route path="/cart/:userId" element={<PrivateRoute><Cart /></PrivateRoute>}/>
+        <Route path="/checkout" element={<PrivateRoute><Checkout/></PrivateRoute>} />
       </Routes>
     <Footer />
+    </CartProvider>
     </> 
   )
 }

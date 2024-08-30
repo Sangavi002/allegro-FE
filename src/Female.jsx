@@ -1,4 +1,4 @@
-import { Box, Text, Img, Button } from "@chakra-ui/react";
+import { Box, Text, Img, Button, useBreakpointValue} from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./Female.css";
@@ -8,10 +8,29 @@ export const Female = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [category, setCategory] = useState("Promoted offers"); 
-
+    const [sortOrder, setSortOrder] = useState("");
+    
     useEffect(() => {
         fetchTask(category);
     }, [category]);
+
+    useEffect(() => {
+        if (data) {
+            const sortedData = [...data].map(collection => {
+                collection.product.sort((a, b) => {
+                    if (sortOrder === "LowToHigh") {
+                        return a.price - b.price;
+                    } else if (sortOrder === "HighToLow") {
+                        return b.price - a.price;
+                    } else {
+                        return 0; 
+                    }
+                });
+                return collection;
+            });
+            setData(sortedData);
+        }
+    }, [sortOrder]);
 
     const fetchTask = async (category) => {
         setLoading(true);
@@ -33,12 +52,12 @@ export const Female = () => {
     };
 
     return (
-        <Box bg="#ebeff2" minHeight="100vh" mt="20px" m="-7px" p="10px">
+        <Box bg="#ebeff2" minHeight="100vh" mt="20px" m="-7px" p="10px" className="container">
             <Box>
                 <Text p="10px 30px" fontSize="25px" fontWeight="700" mb="0">Female Clothing</Text>
             </Box>
             <Box display="flex" flexDirection="row" gap="20px">
-                <Box w="20%" bg="white" p="30px" h="1100">
+                <Box className="category" w="20%" bg="white" p="30px" h="1100px">
                     <Text>Subcategories</Text>
                     <Text>back to <span style={{color:"green"}}>Women's Clothing</span></Text>
                     <Box display="flex" flexDirection="column">
@@ -105,7 +124,7 @@ export const Female = () => {
                         </label> 
                     </Box>
                 </Box>
-                <Box w="75%">
+                <Box className="product">
                     {loading ? (
                         <Text>Loading...</Text>
                     ) : error ? (
@@ -113,15 +132,23 @@ export const Female = () => {
                     ) : (
                         data && (
                             <Box>
+                                
                                 {data.map((collection, collectionIndex) => (
                                     <Box key={collectionIndex} p="10px" bg="white">
+                                        <Box display="flex" justifyContent="end">
+                                            <select onChange={(e) => setSortOrder(e.target.value)} >
+                                                <option value="">Sort by</option>
+                                                <option value="LowToHigh"> Price: Low To High</option>
+                                                <option value="HighToLow"> Price: High To Low</option>
+                                            </select>
+                                        </Box>
                                         <Text fontSize="25px" fontFamily="sans-serif" mb="4" m="8">{collection.name}</Text>
                                         {collection.product.length === 0 ? (
                                             <Text>No products found.</Text>
                                         ) : (
-                                            <Box display="grid" gridTemplateColumns="repeat(3, 280px)" gap="15px">
+                                            <Box className="product_grid">
                                                 {collection.product.map((product, productIndex) => (
-                                                    <Link key={productIndex} to={`/female/${collection.name}/${product._id}`} >
+                                                    <Link key={productIndex} to={`/female/${collection.name}/${product._id}`} style={{textDecoration:"none"}}>
                                                         <Box key={productIndex} mb="4" className="product-box" borderBottomColor="2px red">
                                                             <Text m="0" fontFamily="sans-serif" color="gray" fontSize="12px">
                                                                 Promoted <Img src="https://sangavi002.github.io/allegro-image/errors.png" alt="error" w="5%" mb="-2px" />

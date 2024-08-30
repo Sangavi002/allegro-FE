@@ -2,17 +2,15 @@ import { Box, Text, Img, Button } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-export const ProductDetail = () => {
-    const { productId, category } = useParams(); 
+export const HomeProduct = () => {
+    const { productId,category } = useParams(); 
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [count, setCount] = useState(1);
-    const [selectedSize, setSelectedSize] = useState(""); 
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         product: "", 
-        size: "",
         quantity: "",
     });
 
@@ -32,7 +30,7 @@ export const ProductDetail = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch(`https://allegro-be.onrender.com/female/collections?category=${category}&id=${productId}`, {
+            const response = await fetch(`https://allegro-be.onrender.com/api/collections/?category=${category}&id=${productId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -46,11 +44,6 @@ export const ProductDetail = () => {
             setLoading(false);
         }
     };
-
-    const handleSizeSelect = (size) => {
-        setSelectedSize(size);
-        setFormData({ ...formData, size });
-    }
 
     const updateCart = async () => {
         try {
@@ -99,7 +92,7 @@ export const ProductDetail = () => {
                     <Text>Product not found.</Text>
                 )}
             </Box>
-            <Box w="25%" p="20px" bg="white" h="450px">
+            <Box w="25%" p="20px" bg="white" h="350px">
                 {product && ( 
                     <>
                     <Text fontSize="18px" fontWeight="700" fontFamily="sans-serif" color="#3a4d53" mt="25px" mb="30px">
@@ -112,65 +105,6 @@ export const ProductDetail = () => {
                     <hr />
                     </>
                 )}
-                <Text mb="5px">Size</Text>
-                <Box mb="20px">
-                    <Button 
-                        p="8px 10px" 
-                        w="10%" 
-                        mr="10px" 
-                        bg={selectedSize === 'S' ? 'red' : 'white'} 
-                        border={selectedSize === 'S' ? '1px solid red' : '1px solid gray'} 
-                        color={selectedSize === 'S' ? 'white' : 'black'}
-                        onClick={() => handleSizeSelect('S')}
-                    >
-                        S
-                    </Button>
-                    <Button 
-                        p="8px 10px" 
-                        w="10%" 
-                        mr="10px" 
-                        bg={selectedSize === 'M' ? 'red' : 'white'} 
-                        border={selectedSize === 'M' ? '1px solid red' : '1px solid gray'} 
-                        color={selectedSize === 'M' ? 'white' : 'black'}
-                        onClick={() => handleSizeSelect('M')}
-                    >
-                        M
-                    </Button>
-                    <Button 
-                        p="8px 10px" 
-                        w="10%" 
-                        mr="10px" 
-                        bg={selectedSize === 'L' ? 'red' : 'white'} 
-                        border={selectedSize === 'L' ? '1px solid red' : '1px solid gray'} 
-                        color={selectedSize === 'L' ? 'white' : 'black'}
-                        onClick={() => handleSizeSelect('L')}
-                    >
-                        L
-                    </Button>
-                    <Button 
-                        p="8px 10px" 
-                        w="10%" 
-                        mr="10px" 
-                        bg={selectedSize === '2XL' ? 'red' : 'white'} 
-                        border={selectedSize === '2XL' ? '1px solid red' : '1px solid gray'} 
-                        color={selectedSize === '2XL' ? 'white' : 'black'}
-                        onClick={() => handleSizeSelect('2XL')}
-                    >
-                        2XL
-                    </Button>
-                    <Button 
-                        p="8px 10px" 
-                        w="10%" 
-                        mr="10px" 
-                        bg={selectedSize === '3XL' ? 'red' : 'white'} 
-                        border={selectedSize === '3XL' ? '1px solid red' : '1px solid gray'} 
-                        color={selectedSize === '3XL' ? 'white' : 'black'}
-                        onClick={() => handleSizeSelect('3XL')}
-                    >
-                        3XL
-                    </Button>
-                </Box>
-                <hr />
                 <Text mb="5px">Quantity</Text>
                 <Box mb="10px">
                     <Button p="8px 10px" w="10%" bg="white" border="1px solid gray" onClick={() => setCount(count > 1 ? count - 1 : 1)}>-</Button>

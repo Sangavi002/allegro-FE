@@ -50,6 +50,14 @@ const categoriesData = {
     },
     "Supermarket": {
         icon:"https://sangavi002.github.io/allegro-image/house.png", 
+        subcategories: [
+            {title: 'Groceries', items: ["Coffee","Tea","Yerba Mate","Healthy Foods", "Dried Fruit,Nuts,Seeds","Confectionery Decorations","Dry Goods","Olive Oil","Vinegar"]},
+            {title: 'Deals', items: ["Cat Food at Great Prices","Laundry Detergents at Great Prices"]},
+            {title: 'Pet Supplies', items: ["Dogs","Cats","Aquaristics","Rodents and Rabbits","Terrariums and Other","For Exotic Birds","Dogs Food","Cat Foods","Dog Beds"]},
+            {title: 'Recommended Trends', items: ["Dolce Gusto Capsules","Gift sets","Scratcher for Cats","Spin Mops"]},
+            {title: 'Household Essentials', items: ["Laundry Detergents","Drying Racks","Ironing Boards","Kitchen Soaps","Trash Cans","Mops"]},
+            {title: 'Popular', items: ["Coffee beans","Pasta","Flour","Drainers","Trash bags","Air fresheners","Cat Litter","Litter boxes for Cats","Aquarium filters"]},
+        ]
     },
     "Kid": {
         icon:"https://sangavi002.github.io/allegro-image/kid.png", 
@@ -87,9 +95,9 @@ const categoriesData = {
 };
 
 export const Categories = () => {
-    const [selectedCategory, setSelectedCategory] = useState("Electronics"); // Default to Electronics
-    const navigate = useNavigate(); // Updated to use useNavigate
-    const { isOpen, onOpen, onClose } = useDisclosure(); // Use useDisclosure for managing the menu state
+    const [selectedCategory, setSelectedCategory] = useState("Electronics"); 
+    const navigate = useNavigate(); 
+    const { isOpen, onOpen, onClose } = useDisclosure(); 
 
     const toggleMenu = () => {
         if (isOpen) {
