@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 export const Cart = () => {
-    const { userId ,} = useParams();
+    const { userId ,productId,newQuantity} = useParams();
     const [cart, setCart] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -51,8 +51,7 @@ export const Cart = () => {
             if (!response.ok) {
                 throw new Error('Failed to update quantity');
             }
-            const updatedCart = await response.json();
-            setCart(updatedCart);
+            fetchCart(userId);
         } catch (error) {
             setError(error.message);
         }
@@ -70,8 +69,7 @@ export const Cart = () => {
             if (!response.ok) {
                 throw new Error('Failed to delete item');
             }
-            const updatedCart = await response.json();
-            setCart(updatedCart);
+            fetchCart(userId);
         } catch (error) {
             setError(error.message);
         }
