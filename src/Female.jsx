@@ -2,6 +2,7 @@ import { Box, Text, Img, Button, useBreakpointValue} from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./Female.css";
+import { useNavigate } from "react-router-dom";
 
 export const Female = () => {
     const [data, setData] = useState(null);
@@ -9,6 +10,7 @@ export const Female = () => {
     const [error, setError] = useState(null);
     const [category, setCategory] = useState("Promoted offers"); 
     const [sortOrder, setSortOrder] = useState("");
+    const navigate = useNavigate()
     
     useEffect(() => {
         fetchTask(category);
@@ -57,9 +59,9 @@ export const Female = () => {
                 <Text p="10px 30px" fontSize="25px" fontWeight="700" mb="0">Female Clothing</Text>
             </Box>
             <Box display="flex" flexDirection="row" gap="20px">
-                <Box className="category" w="20%" bg="white" p="30px" h="1100px">
+                <Box className="category" w="15%" bg="white" p="30px" h="1150px">
                     <Text>Subcategories</Text>
-                    <Text>back to <span style={{color:"green"}}>Women's Clothing</span></Text>
+                    <Button border="none" bg="none" mb="10px" onClick={() => navigate("/female")}>back to <span style={{color:"green"}}>Women's Clothing</span></Button>
                     <Box display="flex" flexDirection="column">
                         <Button className="category-button" onClick={() => setCategory("Blouses")}>Blouses</Button>
                         <Button className="category-button" onClick={() => setCategory("Bodysuits")}>Body suits</Button>
@@ -124,7 +126,7 @@ export const Female = () => {
                         </label> 
                     </Box>
                 </Box>
-                <Box className="product">
+                <Box className="product" w="80%">
                     {loading ? (
                         <Text>Loading...</Text>
                     ) : error ? (

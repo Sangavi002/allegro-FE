@@ -1,7 +1,7 @@
 import { Box, Text, Button, Input } from "@chakra-ui/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useCart } from './CartContext';
+import { useCart } from './CartContext';  // Adjust import if needed
 
 export const Checkout = () => {
     const navigate = useNavigate(); 
@@ -69,10 +69,15 @@ export const Checkout = () => {
             });
             const data = await response.json();
             if (response.status === 200) {
+                // Clear local storage
                 localStorage.removeItem("Products");
                 localStorage.removeItem("totalPrice");
-                updateCart([])
-                alert("Order placed successful!");
+                
+                // Update cart context
+                updateCart([]);
+                
+                // Redirect to home or a success page
+                alert("Order placed successfully!");
                 navigate("/"); 
             } else {
                 alert("Checkout failed. Please try again.");
@@ -82,7 +87,7 @@ export const Checkout = () => {
         }
     }
 
-    return(
+    return (
         <Box pt="50px" pl="10px" pr="10px" bg="#ebeff2" minHeight="100vh" mt="20px" m="-7px">
             <Box display="flex" flexDirection="row" w="70%" h="40px" p="10px 20px" gap="5px">  
                 <Box w="30%">
@@ -97,9 +102,9 @@ export const Checkout = () => {
             </Box> 
             <Box display="flex" gap="20px">
                 <Box width="75%" h="auto" p="10px" mb="20px" fontFamily="sans-serif" bg="white">
-                    <Box >
+                    <Box>
                         <Text fontSize="25px" fontWeight="700" m="15px">Your details</Text>
-                    </Box >
+                    </Box>
                     <hr />
                     <Text mt="20px">This is your first purchase! Enter your details and we will save them to your user account on Allegro. You can always change the details you provided in the My Account tab.</Text>
                     <Box display="flex" flexDirection="column" w="75%">
@@ -236,20 +241,20 @@ export const Checkout = () => {
                     <Button type="submit" onClick={handleSubmit} bg="#ff5a00" color="white" border="none" p="10px" letterSpacing="1.5px">SAVE</Button>
                 </Box>
                 <Box width="30%" h="280px" p="10px"  bg="white" fontFamily="sans-serif">
-                    <Box >
+                    <Box>
                         <Text fontSize="25px" fontWeight="700" m="15px">Summary</Text>
-                    </Box >
+                    </Box>
                     <hr />
                     <Box display="flex" flexDirection="row" justifyContent="space-between" fontSize="15px" color="gray">
-                        <Text >Value of products</Text>
+                        <Text>Value of products</Text>
                         <Text>PLN{localStorage.getItem("totalPrice")}</Text>
                     </Box>
                     <hr />
                     <Box display="flex" flexDirection="row" justifyContent="space-between" color="#3a4d53">
                         <Text fontSize="15px" fontWeight="700">Total</Text>
-                        <Text fontSize="25px" fontWeight="700" m="5px">PLN{localStorage.getItem("totalPrice") }</Text>
+                        <Text fontSize="25px" fontWeight="700" m="5px">PLN{localStorage.getItem("totalPrice")}</Text>
                     </Box>
-                    <Button bg="#ff5a00" color="white" border="none" p="10px" letterSpacing="1.5px" w="100%">BUY AND PAY</Button>
+                    <Button bg="#ff5a00" color="white" border="none" p="10px" letterSpacing="1.5px" w="100%" onClick={handleSubmit}>BUY AND PAY</Button>
                     <Text fontSize="12px" color="gray">By clicking this button you confirm your purchase. The seller will receive your order.</Text>
                 </Box>
             </Box>

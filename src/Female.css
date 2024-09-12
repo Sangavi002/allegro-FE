@@ -42,7 +42,7 @@
 }
 .product_grid{
     display:grid;
-    grid-template-columns:repeat(3,320px);
+    grid-template-columns:repeat(3,300px);
     gap:15px;
 }
 @media screen and (max-width:1024px){
