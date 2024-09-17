@@ -1,8 +1,7 @@
 import { Box, Text, Button, Input } from "@chakra-ui/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useCart } from './CartContext';  // Adjust import if needed
-
+import { useCart } from './CartContext';  
 export const Checkout = () => {
     const navigate = useNavigate(); 
     const { updateCart } = useCart(); 
@@ -69,14 +68,12 @@ export const Checkout = () => {
             });
             const data = await response.json();
             if (response.status === 200) {
-                // Clear local storage
+               
                 localStorage.removeItem("Products");
                 localStorage.removeItem("totalPrice");
                 
-                // Update cart context
                 updateCart([]);
-                
-                // Redirect to home or a success page
+
                 alert("Order placed successfully!");
                 navigate("/"); 
             } else {

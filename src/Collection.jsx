@@ -1,4 +1,4 @@
-import { Box, Text,Button, Img } from "@chakra-ui/react"
+import { Box, Text,Button, Img,Grid } from "@chakra-ui/react"
 import { useEffect,useState,useRef } from "react";
 import { Link } from "react-router-dom";
 import badgeLow from "./image/badgeLow.png"
@@ -75,7 +75,7 @@ export const Collection = () => {
                                     }}>
                                         {collection.product.map((product, productIndex) => (
                                             <Box w="17%" flex="0 0 auto" p="10px" key={productIndex}>
-                                                <Link key={productIndex} to={`/${collection.name}/${product._id}`} style={{textDecoration: "none"}}>
+                                                <Link key={productIndex} to={`/${product.title}/${product._id}`} style={{textDecoration: "none"}}>
                                                 <Box display="flex" justifyContent="center" h="200px">
                                                     <img src={product.image} alt={product.title} width="70%" h="200px" /> 
                                                 </Box>

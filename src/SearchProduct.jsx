@@ -1,9 +1,11 @@
 import { Box, Text, Img, Button } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useContext } from "react";
+import { SearchContext } from "./SearchContext"; 
 
-export const HomeProduct = () => {
-    const { productId,category } = useParams(); 
+export const SearchProduct = () => {
+    const { productId, search } = useParams(); 
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -15,10 +17,10 @@ export const HomeProduct = () => {
     });
 
     useEffect(() => {
-        if (productId && category) {
-            fetchProductDetail(category, productId);
+        if (productId && search) {
+            fetchProductDetail(search, productId);
         }
-    }, [productId, category]);
+    }, [productId, search]);
 
     useEffect(() => {
         if (productId) {
@@ -26,19 +28,18 @@ export const HomeProduct = () => {
         }
     }, [productId]);
 
-    const fetchProductDetail = async (category, productId) => {
+    const fetchProductDetail = async (search, productId) => {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch(`https://allegro-be.onrender.com/api/collections/?category=${category}&id=${productId}`, {
+            const response = await fetch(`https://allegro-be.onrender.com/user/products/?title=${search}&id=${productId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                 },
             });
             const data = await response.json();
-            console.log(data)
-            setProduct(data);
+            setProduct(data[0]);
         } catch (error) {
             setError(error.message);
         } finally {
@@ -56,13 +57,13 @@ export const HomeProduct = () => {
                 },
                 body: JSON.stringify({
                     userId: localStorage.getItem('userId'),
-                products: [
-                    {
-                        product: formData.product, 
-                        size: formData.size,
-                        quantity: count
-                    }
-                ] 
+                    products: [
+                        {
+                            product: formData.product, 
+                            size: formData.size,
+                            quantity: count
+                        }
+                    ] 
                 }),
             });
             const data = await response.json();
@@ -87,7 +88,6 @@ export const HomeProduct = () => {
                         <Box w="50%" h="500" ml="auto" mr="auto">
                             <Img src={product.image} alt={product.title} width="100%" mb="10px" h="480" />
                         </Box>
-                        
                     </>
                 ) : (
                     <Text>Product not found.</Text>
@@ -101,7 +101,7 @@ export const HomeProduct = () => {
                     </Text>
                     <hr /> 
                     <Text color="#1dbd25" fontSize="15px" fontFamily="sans-serif" fontWeight="700" mt="10px" mb="10">
-                        delivery {product.delivery} <Img src="https://sangavi002.github.io/allegro-image/errors.png" alt="error" w="5%" mb="-4px" />
+                        Delivery {product.delivery} <Img src="https://sangavi002.github.io/allegro-image/errors.png" alt="error" w="5%" mb="-4px" />
                     </Text>
                     <hr />
                     </>

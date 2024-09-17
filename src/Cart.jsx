@@ -1,12 +1,15 @@
 import { Box, Text, Img, Button, Spinner } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useCart } from './CartContext'; 
 
 export const Cart = () => {
-    const { userId ,productId,newQuantity} = useParams();
+    const { userId } = useParams();
+    const { updateCart } = useCart(); 
     const [cart, setCart] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [totalPrice, setTotalPrice] = useState(0);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -14,6 +17,15 @@ export const Cart = () => {
             fetchCart(userId);
         }
     }, [userId]);
+
+    useEffect(() => {
+        if (cart && Array.isArray(cart.products)) {
+            const total = calculateTotalPrice();
+            setTotalPrice(total);
+            localStorage.setItem("totalPrice", total.toFixed(2));
+            updateCart(cart.products.reduce((count, item) => count + item.quantity, 0)); // Update cart count in context
+        }
+    }, [cart, updateCart]);
 
     const fetchCart = async (userId) => {
         setLoading(true);
@@ -30,8 +42,8 @@ export const Cart = () => {
                 throw new Error('Failed to fetch cart');
             }
             const data = await response.json();
-            localStorage.setItem("Products",JSON.stringify(data.products)) || []
-             setCart(data);
+            localStorage.setItem("Products", JSON.stringify(data.products) || []);
+            setCart(data);
         } catch (error) {
             setError(error.message);
         } finally {
@@ -40,6 +52,7 @@ export const Cart = () => {
     };
 
     const updateQuantity = async (productId, newQuantity) => {
+        if (newQuantity <= 0) return; 
         try {
             const response = await fetch(`https://allegro-be.onrender.com/cart/cartItems?userId=${userId}&productId=${productId}&quantity=${newQuantity}`, {
                 method: 'PUT',
@@ -51,7 +64,7 @@ export const Cart = () => {
             if (!response.ok) {
                 throw new Error('Failed to update quantity');
             }
-            fetchCart(userId);
+            fetchCart(userId); 
         } catch (error) {
             setError(error.message);
         }
@@ -69,46 +82,38 @@ export const Cart = () => {
             if (!response.ok) {
                 throw new Error('Failed to delete item');
             }
-            fetchCart(userId);
+            fetchCart(userId); 
         } catch (error) {
             setError(error.message);
         }
     };
 
     const calculateTotalPrice = () => {
-        const total = cart.products.reduce((total, item) => total + item.product.price * item.quantity, 0);
-        return total;
+        return cart.products.reduce((total, item) => total + item.product.price * item.quantity, 0);
     };
 
-    useEffect(() => {
-        if (cart && cart.products) {
-            const total = calculateTotalPrice();
-            localStorage.setItem("totalPrice", total.toFixed(2));
-        }
-    }, [cart]);
-    
-    
     return (
-        <Box  pt="50px" pl="10px" pr="10px" bg="#ebeff2" minHeight="100vh" mt="20px" m="-7px">
-            <Box display="flex" flexDirection="row" w="70%" h="40px" p="10px 20px" gap="5px"> 
-                    <Box w="30%">
-                        <Text fontSize="20px" fontFamily="sans-serif" fontWeight="500" color="#ff5a00" m="0" pb="7px" borderBottom="5px solid #ff5a00">Your Cart</Text>
-                    </Box>
-                    <Box  w="30%">
-                        <Text fontSize="20px" fontFamily="sans-serif" fontWeight="500" color="gray" m="0" pb="7px" borderBottom="5px solid gray">Delivery and payment</Text>
-                    </Box>
-                    <Box  w="30%">
-                        <Text fontSize="20px" fontFamily="sans-serif" fontWeight="500" color="gray" m="0" pb="7px" borderBottom="5px solid gray">Done</Text>
-                    </Box>
+        <Box pt="50px" pl="10px" pr="10px" bg="#ebeff2" minHeight="100vh" mt="20px" m="-7px">
+            <Box display="flex" flexDirection="row" w="70%" h="40px" p="10px 20px" gap="5px">
+                <Box w="30%">
+                    <Text fontSize="20px" fontFamily="sans-serif" fontWeight="500" color="#ff5a00" m="0" pb="7px" borderBottom="5px solid #ff5a00">Your Cart</Text>
+                </Box>
+                <Box w="30%">
+                    <Text fontSize="20px" fontFamily="sans-serif" fontWeight="500" color="gray" m="0" pb="7px" borderBottom="5px solid gray">Delivery and payment</Text>
+                </Box>
+                <Box w="30%">
+                    <Text fontSize="20px" fontFamily="sans-serif" fontWeight="500" color="gray" m="0" pb="7px" borderBottom="5px solid gray">Done</Text>
+                </Box>
             </Box>
             <Box display="flex" gap="20px">
-                <Box width="70%" h="auto" p="10px" >
-                    
+                <Box width="70%" h="auto" p="10px">
                     {loading ? (
-                        <Spinner size="xl" />
+                        <Box display="flex" alignItems="center" justifyContent="center" minHeight="200px">
+                            <Spinner size="xl" />
+                        </Box>
                     ) : error ? (
                         <Text color="red.500">Error: {error}</Text>
-                    ) : cart && cart.products.length > 0 ? (
+                    ) : cart && Array.isArray(cart.products) && cart.products.length > 0 ? (
                         cart.products.map((item, index) => (
                             <Box key={index} borderBottom="1px solid gray" mb="10px" p="10px">
                                 <Box display="flex" flexDirection="row" bg="white">
@@ -139,9 +144,9 @@ export const Cart = () => {
                     ) : (
                         <Text>No items in cart.</Text>
                     )}
-                </Box>"
+                </Box>
                 <Box width="25%" h="250px" p="10px" bg="white" fontFamily="sans-serif">
-                    {cart && cart.products.length > 0 && (
+                    {cart && Array.isArray(cart.products) && cart.products.length > 0 && (
                         <>
                             <Box display="flex" flexDirection="row" justifyContent="space-between">
                                 <Box>
@@ -149,7 +154,7 @@ export const Cart = () => {
                                     <Text fontSize="lg" fontWeight="700">Delivery</Text>
                                 </Box>
                                 <Box >
-                                    <Text fontSize="lg" fontWeight="600">PLN {calculateTotalPrice().toFixed(2)}</Text>
+                                    <Text fontSize="lg" fontWeight="600">PLN {totalPrice.toFixed(2)}</Text>
                                     <Text fontSize="lg" fontWeight="700">free</Text>
                                 </Box>
                             </Box>
@@ -159,11 +164,12 @@ export const Cart = () => {
                                     <Text fontSize="lg" fontWeight="700">With Delivery</Text>
                                 </Box>
                                 <Box>
-                                    <Text fontSize="24px" fontWeight="600" m="0" mt="10px">PLN {calculateTotalPrice().toFixed(2)}</Text>
+                                    <Text fontSize="24px" fontWeight="600" m="0" mt="10px">PLN {totalPrice.toFixed(2)}</Text>
                                 </Box>
                             </Box>
-                            <Button w="100%" p="13px 10px" letterSpacing=".8px" border="none" bg="#ff5a00" color="white" mb="10px" onClick={() =>navigate("/checkout")}>Delivery and payment</Button>
-                            <Button w="100%" p="13px 10px" letterSpacing=".8px" border="none" color="green" bg="white" onClick={() => navigate("/")}>CONTINUE SHOPPING</Button>
+                            <Button w="100%" p="13px 10px" letterSpacing=".8px" border="none" bg="#ff5a00" color="white" fontSize="20px" mt="10px" onClick={() => navigate("/checkout")}>
+                                Go to checkout
+                            </Button>
                         </>
                     )}
                 </Box>

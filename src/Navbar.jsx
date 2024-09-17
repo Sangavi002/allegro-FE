@@ -1,3 +1,4 @@
+import React from "react";
 import { Box, Img, Input, Flex, Button, Modal, ModalOverlay, ModalContent, ModalHeader, Text } from "@chakra-ui/react";
 import logo from "./image/logo.png";
 import truck from "./image/truck.png";
@@ -15,11 +16,14 @@ import percentage from "./image/percentage.png";
 import suit from "./image/suit.png";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "./CartContext";
+import { useContext } from "react";
+import { SearchContext } from "./SearchContext"; 
 
 export const Navbar = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const navigate = useNavigate();
     const { cartCount } = useCart();
+    const { query, setQuery } = useContext(SearchContext);
 
     const goToCart = () => {
         navigate(`/cart/${localStorage.getItem('userId')}`);
@@ -33,14 +37,21 @@ export const Navbar = () => {
                         <Img src={logo} alt="logo" w="100%" />
                     </Box>
                     <Box w="28%" h="40px">
-                        <Input type="text" placeholder="what are you looking for?" p="10px 150px 10px 10px" ml="20px" />
+                        <Input 
+                            type="text" 
+                            placeholder="What are you looking for?" 
+                            p="10px 150px 10px 10px" 
+                            ml="20px"  
+                            value={query} 
+                            onChange={(e) => setQuery(e.target.value)}
+                        />
                     </Box>
                     <Box w="17%" h="40px">
                         <select name='All categories' style={{ padding: "10px 0px 10px 10px", fontSize: "14px" }}>
                             <option value='All categories'>All categories</option>
                             <optgroup label="Categories">
-                                <option value='' className="option">House and garden</option>
-                                <option value='' className="option">Kid</option>
+                                <option value=''>House and garden</option>
+                                <option value=''>Kid</option>
                                 <option value=''>Electronics</option>
                                 <option value=''>Company and art</option>
                                 <option value=''>Collections and art</option>
@@ -95,8 +106,6 @@ export const Navbar = () => {
                                     color="white"
                                     fontSize="12px"
                                     bgColor="#ff5a00"
-                                    
-                                    
                                 >
                                     <Text>{cartCount}</Text>
                                 </Box>
@@ -111,8 +120,7 @@ export const Navbar = () => {
                             <ModalContent w="23%" left="900px" top="80px" border="1px solid" p="10px 20px" bg="white" position="relative" zIndex="3">
                                 <Img src={allegro} alt="allegro" w="70%" ml="auto" mr="auto" />
                                 <ModalHeader textAlign="center" fontSize="25px" letterSpacing="1px" fontWeight="700">Welcome to Allegro!</ModalHeader>
-                                <Text color="#a2a2a2" fontSize="13px" fontFamily="sans-serif" textAlign="center">Log in and see your purchases, watched offers and notifications.
-                                    You are at home in Allegro!</Text>
+                                <Text color="#a2a2a2" fontSize="13px" fontFamily="sans-serif" textAlign="center">Log in and see your purchases, watched offers and notifications. You are at home in Allegro!</Text>
                                 <Button p="10px" border="none" bg="#f85d01" color="white" letterSpacing="2px" onClick={() => navigate("/login")}>SIGN IN</Button>
                                 <Text m="0" p="10px">First time on Allegro? <Button border="none" color="green" bg="white" letterSpacing=".5px" onClick={() => navigate("/register")}>Create an account</Button></Text>
                             </ModalContent>
@@ -131,5 +139,5 @@ export const Navbar = () => {
             </Box>
             <hr style={{ marginTop: "1px", marginBottom: "-2px" }} />
         </>
-    )
-}
+    );
+};
