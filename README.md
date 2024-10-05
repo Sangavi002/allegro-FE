@@ -4,7 +4,7 @@ Allegro Clone App is an online shopping platform built to replicate the function
 
 ## Features
 
-- **User Authentication**: Users can log in to checkout products; guests can browse but must log in to make purchases.
+- **User Authentication**: Users can log in to add products to their cart; guests can browse products but must log in to make purchases.
 
 - **Secure Data Handling**: Passwords and sensitive information are encrypted using bcrypt, ensuring user security.
 
